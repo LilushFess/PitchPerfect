@@ -9,6 +9,10 @@
 import UIKit
 import AVFoundation
 
+
+// For Echo and Reverb functions 
+//I used tips and code from http://sandmemory.blogspot.com/2014/12/how-would-you-add-reverbecho-to-audio.html
+
 class PlaySoundsViewController: UIViewController {
     
     var audioPlayer:AVAudioPlayer!
@@ -61,6 +65,50 @@ class PlaySoundsViewController: UIViewController {
     
     @IBAction func playDarthVaderAudio(sender: UIButton) {
         playAudioWithPitchVariable(-1000)
+    }
+    
+    @IBAction func playEchoAudio(sender: UIButton) {
+        audioPlayer.stop()
+        audioPlayer.currentTime = 0;
+        audioPlayer.play()
+        
+        if let audioPlayerEcho = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl) {
+            dispatch_after(1, dispatch_get_main_queue(), { () -> Void in
+                audioPlayerEcho.currentTime = 0
+                audioPlayerEcho.play()
+            })
+            
+            
+//            let delay:NSTimeInterval = 1
+//            let playtime:NSTimeInterval = audioPlayerEcho.deviceCurrentTime + delay
+//          //  audioPlayerEcho.stop()
+//          //  audioPlayerEcho.currentTime = 0
+//            audioPlayerEcho.volume = 0.7;
+//            
+//            audioPlayerEcho.playAtTime(playtime)
+        } else {
+            print ("Error!")
+        }
+
+    }
+    
+    @IBAction func playReverbAudio(sender: UIButton) {
+        let N:Int = 10
+        var reverbPlayers:[AVAudioPlayer] = []
+        for _ in 0...N {
+            if let audioPlayerTemp = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl) {
+                reverbPlayers.append(audioPlayerTemp)
+            }
+        }
+        let delay:NSTimeInterval = 0.02
+        for i in 0...N {
+            let curDelay:NSTimeInterval = delay*NSTimeInterval(i)
+            let player:AVAudioPlayer = reverbPlayers[i]
+            let exponent:Double = -Double(i)/Double(N/2)
+            let volume = Float(pow(Double(M_E), exponent))
+            player.volume = volume
+            player.playAtTime(player.deviceCurrentTime + curDelay)
+        }
     }
     
     @IBAction func stop(sender: UIButton) {
