@@ -46,12 +46,40 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Dv-g3-LHF">
+                                <rect key="frame" x="205" y="530" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="1Dv-g3-LHF" secondAttribute="height" multiplier="1:1" id="Llm-fL-Iag"/>
+                                    <constraint firstAttribute="width" constant="50" id="xAn-wJ-r6f"/>
+                                </constraints>
+                                <state key="normal" image="pause_blue"/>
+                                <state key="disabled" image="pause_grey"/>
+                                <connections>
+                                    <action selector="pauseRecording:" destination="PsS-Me-qwa" eventType="touchUpInside" id="xZb-Gp-Yz3"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AGi-re-iWQ">
+                                <rect key="frame" x="345" y="530" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="2t1-Pk-NZs"/>
+                                    <constraint firstAttribute="width" secondItem="AGi-re-iWQ" secondAttribute="height" multiplier="1:1" id="w9J-Ph-dzr"/>
+                                </constraints>
+                                <state key="normal" image="resume_blue"/>
+                                <state key="disabled" image="resume_grey"/>
+                                <connections>
+                                    <action selector="resumeRecording:" destination="PsS-Me-qwa" eventType="touchUpInside" id="06S-eD-Gi0"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="wWj-N2-b1V" firstAttribute="top" secondItem="AGi-re-iWQ" secondAttribute="bottom" constant="20" id="8JH-dc-noH"/>
                             <constraint firstItem="giX-g7-tkg" firstAttribute="centerY" secondItem="dxR-sw-scE" secondAttribute="centerY" id="8YV-IT-ZDc"/>
                             <constraint firstItem="giX-g7-tkg" firstAttribute="centerX" secondItem="dxR-sw-scE" secondAttribute="centerX" id="BTU-3S-4kR"/>
                             <constraint firstItem="wWj-N2-b1V" firstAttribute="top" secondItem="EWo-9b-Xu6" secondAttribute="bottom" constant="20" id="Bkr-sT-43O"/>
+                            <constraint firstItem="EWo-9b-Xu6" firstAttribute="leading" secondItem="1Dv-g3-LHF" secondAttribute="trailing" constant="20" id="KbB-5C-0Wq"/>
+                            <constraint firstItem="wWj-N2-b1V" firstAttribute="top" secondItem="1Dv-g3-LHF" secondAttribute="bottom" constant="20" id="N0K-7H-5ga"/>
+                            <constraint firstItem="AGi-re-iWQ" firstAttribute="leading" secondItem="EWo-9b-Xu6" secondAttribute="trailing" constant="20" id="Nt7-3B-Qr5"/>
                             <constraint firstItem="EWo-9b-Xu6" firstAttribute="centerX" secondItem="dxR-sw-scE" secondAttribute="centerX" id="Q8O-cX-YUO"/>
                             <constraint firstItem="GrN-zP-Kte" firstAttribute="centerX" secondItem="dxR-sw-scE" secondAttribute="centerX" id="TN1-TY-ZxM"/>
                             <constraint firstItem="GrN-zP-Kte" firstAttribute="top" secondItem="giX-g7-tkg" secondAttribute="bottom" constant="10" id="gQH-JX-Ooe"/>
@@ -59,8 +87,10 @@
                     </view>
                     <navigationItem key="navigationItem" title="Record" id="1Vo-As-DYT"/>
                     <connections>
+                        <outlet property="pauseButton" destination="1Dv-g3-LHF" id="525-4l-ZBi"/>
                         <outlet property="recordButton" destination="giX-g7-tkg" id="Cur-fr-VV3"/>
                         <outlet property="recordingInProgress" destination="GrN-zP-Kte" id="Xx7-Da-Y2G"/>
+                        <outlet property="resumeButton" destination="AGi-re-iWQ" id="7MC-Qs-dMI"/>
                         <outlet property="stopButton" destination="EWo-9b-Xu6" id="UBG-p2-NBs"/>
                         <segue destination="nEu-Sz-qUD" kind="show" identifier="stopRecording" id="qnL-7F-ie7">
                             <nil key="action"/>
@@ -203,6 +233,10 @@
         <image name="echo" width="160" height="160"/>
         <image name="fast" width="200" height="200"/>
         <image name="microphone" width="200" height="200"/>
+        <image name="pause_blue" width="80" height="80"/>
+        <image name="pause_grey" width="80" height="80"/>
+        <image name="resume_blue" width="80" height="80"/>
+        <image name="resume_grey" width="80" height="80"/>
         <image name="reverb" width="160" height="160"/>
         <image name="slow" width="200" height="200"/>
         <image name="stop" width="100" height="100"/>

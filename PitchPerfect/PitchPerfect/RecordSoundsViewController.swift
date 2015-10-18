@@ -14,6 +14,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     @IBOutlet weak var recordingInProgress: UILabel!
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var recordButton: UIButton!
+    @IBOutlet weak var resumeButton: UIButton!
+    @IBOutlet weak var pauseButton: UIButton!
     
     var audioRecorder:AVAudioRecorder!
     var recordedAudio:RecordedAudio!
@@ -29,6 +31,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         super.viewWillAppear(animated)
         stopButton.hidden = true
         recordButton.enabled = true
+        resumeButton.hidden = true
+        pauseButton.hidden = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,7 +46,9 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         recordingInProgress.hidden = false
         stopButton.hidden = false
         recordButton.enabled = false
-        
+        resumeButton.hidden = false
+        resumeButton.enabled = false
+        pauseButton.hidden = false
         let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
         
         let recordingName = "my_audio.wav"
@@ -71,6 +77,18 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             try audioSession.setActive(false)
         } catch _ {
         }
+    }
+    
+    @IBAction func pauseRecording(sender: UIButton) {
+        resumeButton.enabled = true
+        sender.enabled = false
+        audioRecorder.pause()
+    }
+    
+    @IBAction func resumeRecording(sender: UIButton) {
+        pauseButton.enabled = true
+        sender.enabled = false
+        audioRecorder.record()
     }
     
     //MARK: - AVAudioRecorderDelegate
