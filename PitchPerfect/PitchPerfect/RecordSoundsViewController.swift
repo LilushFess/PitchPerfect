@@ -49,6 +49,9 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         resumeButton.hidden = false
         resumeButton.enabled = false
         pauseButton.hidden = false
+        
+        recordingInProgress.text = "Recording!"
+        
         let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
         
         let recordingName = "my_audio.wav"
@@ -80,12 +83,14 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     }
     
     @IBAction func pauseRecording(sender: UIButton) {
+        recordingInProgress.text = "Pause Recording!"
         resumeButton.enabled = true
         sender.enabled = false
         audioRecorder.pause()
     }
     
     @IBAction func resumeRecording(sender: UIButton) {
+        recordingInProgress.text = "Recording!"
         pauseButton.enabled = true
         sender.enabled = false
         audioRecorder.record()

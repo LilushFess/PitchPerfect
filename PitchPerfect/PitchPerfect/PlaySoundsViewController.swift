@@ -16,6 +16,7 @@ import AVFoundation
 class PlaySoundsViewController: UIViewController {
     
     var audioPlayer:AVAudioPlayer!
+    var audioPlayerEcho:AVAudioPlayer!
     var receivedAudio: RecordedAudio!
     var audioEngine: AVAudioEngine!
     var audioFile:AVAudioFile!
@@ -28,7 +29,6 @@ class PlaySoundsViewController: UIViewController {
         audioPlayer.enableRate = true
         audioEngine = AVAudioEngine()
         audioFile = try? AVAudioFile(forReading: receivedAudio.filePathUrl)
-        // Do any additional setup after loading the view.
         
         let session = AVAudioSession.sharedInstance()
         
@@ -71,21 +71,16 @@ class PlaySoundsViewController: UIViewController {
         audioPlayer.stop()
         audioPlayer.currentTime = 0;
         audioPlayer.play()
-        
-        if let audioPlayerEcho = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl) {
-            dispatch_after(1, dispatch_get_main_queue(), { () -> Void in
-                audioPlayerEcho.currentTime = 0
-                audioPlayerEcho.play()
-            })
-            
-            
-//            let delay:NSTimeInterval = 1
-//            let playtime:NSTimeInterval = audioPlayerEcho.deviceCurrentTime + delay
-//          //  audioPlayerEcho.stop()
-//          //  audioPlayerEcho.currentTime = 0
-//            audioPlayerEcho.volume = 0.7;
-//            
-//            audioPlayerEcho.playAtTime(playtime)
+        if audioPlayerEcho == nil {
+           audioPlayerEcho = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
+        }
+        if audioPlayerEcho != nil  {
+            let delay:NSTimeInterval = 0.5
+            let playtime:NSTimeInterval = audioPlayerEcho.deviceCurrentTime + delay
+            audioPlayerEcho.stop()
+            audioPlayerEcho.currentTime = 0
+            audioPlayerEcho.volume = 0.6;
+            audioPlayerEcho.playAtTime(playtime)
         } else {
             print ("Error!")
         }
