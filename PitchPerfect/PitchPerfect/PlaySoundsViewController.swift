@@ -26,17 +26,13 @@ class PlaySoundsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        audioPlayer = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
+        try! audioPlayer = AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
         audioPlayer.enableRate = true
         audioEngine = AVAudioEngine()
-        audioFile = try? AVAudioFile(forReading: receivedAudio.filePathUrl)
+        try! audioFile = AVAudioFile(forReading: receivedAudio.filePathUrl)
         
         let session = AVAudioSession.sharedInstance()
-        
-        do {
-            try session.overrideOutputAudioPort(AVAudioSessionPortOverride.Speaker)
-        } catch _ {
-        }
+        try! session.overrideOutputAudioPort(AVAudioSessionPortOverride.Speaker)
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,17 +43,11 @@ class PlaySoundsViewController: UIViewController {
     //MARK: - Actions
     
     @IBAction func playSlowly(sender: UIButton) {
-        audioPlayer.stop()
-        audioPlayer.rate = 0.5
-        audioPlayer.currentTime = 0.0
-        audioPlayer.play()
+        playAudioWithRate(0.5)
     }
     
     @IBAction func playFaster(sender: UIButton) {
-        audioPlayer.stop()
-        audioPlayer.rate = 2.0
-        audioPlayer.currentTime = 0.0
-        audioPlayer.play()
+        playAudioWithRate(2.0)
     }
     
     @IBAction func playChipmunkAudio(sender: UIButton) {
@@ -69,22 +59,17 @@ class PlaySoundsViewController: UIViewController {
     }
     
     @IBAction func playEchoAudio(sender: UIButton) {
-        audioPlayer.stop()
-        audioPlayer.currentTime = 0;
+        reloadAudio()
         audioPlayer.play()
         if audioPlayerEcho == nil {
            audioPlayerEcho = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
         }
-        if audioPlayerEcho != nil  {
-            let delay:NSTimeInterval = 0.5
-            let playtime:NSTimeInterval = audioPlayerEcho.deviceCurrentTime + delay
-            audioPlayerEcho.stop()
-            audioPlayerEcho.currentTime = 0
-            audioPlayerEcho.volume = 0.6;
-            audioPlayerEcho.playAtTime(playtime)
-        } else {
-            print ("Error!")
-        }
+        let delay:NSTimeInterval = 0.5
+        let playtime:NSTimeInterval = audioPlayerEcho.deviceCurrentTime + delay
+        audioPlayerEcho.stop()
+        audioPlayerEcho.currentTime = 0
+        audioPlayerEcho.volume = 0.6;
+        audioPlayerEcho.playAtTime(playtime)
 
     }
     
@@ -111,10 +96,24 @@ class PlaySoundsViewController: UIViewController {
         audioPlayer.stop()
     }
     
-    func playAudioWithPitchVariable(pitch: Float) {
+    //MARK: Play Audio
+    
+    func reloadAudio() {
         audioPlayer.stop()
         audioEngine.stop()
         audioEngine.reset()
+        audioPlayer.currentTime = 0;
+        audioPlayer.rate = 1.0
+    }
+    
+    func playAudioWithRate(rate: Float) {
+        reloadAudio()
+        audioPlayer.rate = rate
+        audioPlayer.play()
+    }
+    
+    func playAudioWithPitchVariable(pitch: Float) {
+        reloadAudio()
 
         let audioPlayerNode = AVAudioPlayerNode()
         audioEngine.attachNode(audioPlayerNode)
@@ -127,10 +126,7 @@ class PlaySoundsViewController: UIViewController {
         audioEngine.connect(changePitchEffect, to: audioEngine.outputNode, format: nil)
         
         audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
-        do {
-            try audioEngine.start()
-        } catch _ {
-        }
+        try! audioEngine.start()
         audioPlayerNode.play()
     }
 

@@ -24,7 +24,6 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -33,76 +32,58 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         recordButton.enabled = true
         resumeButton.hidden = true
         pauseButton.hidden = true
+        
+        recordingInProgress.text = "Tap to Record"
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     //MARK: - Actions
     
     @IBAction func recordAudio(sender: UIButton) {
-        recordingInProgress.hidden = false
         stopButton.hidden = false
         recordButton.enabled = false
         resumeButton.hidden = false
-        resumeButton.enabled = false
         pauseButton.hidden = false
         
-        recordingInProgress.text = "Recording!"
-        
-        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0]
+        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
         
         let recordingName = "my_audio.wav"
         let pathArray = [dirPath, recordingName]
         let filePathUrl = NSURL.fileURLWithPathComponents(pathArray)
         
         let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setCategory(AVAudioSessionCategoryPlayAndRecord)
-        } catch _ {
-        }
+        try! session.setCategory(AVAudioSessionCategoryPlayAndRecord)
         
-        audioRecorder = try? AVAudioRecorder(URL: filePathUrl!, settings: Dictionary())
+        try! audioRecorder = AVAudioRecorder(URL: filePathUrl!, settings: Dictionary())
         audioRecorder.delegate = self
         audioRecorder.meteringEnabled = true
         audioRecorder.prepareToRecord()
-        audioRecorder.record()
+        recordingState()
+        
     }
     
     @IBAction func stopRecordAudio(sender: UIButton) {
-        recordingInProgress.hidden = true
-        
         audioRecorder.stop()
         let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setActive(false)
-        } catch _ {
-        }
+        try! audioSession.setActive(false)
     }
     
     @IBAction func pauseRecording(sender: UIButton) {
-        recordingInProgress.text = "Pause Recording!"
-        resumeButton.enabled = true
-        sender.enabled = false
-        audioRecorder.pause()
+        pauseState()
     }
     
     @IBAction func resumeRecording(sender: UIButton) {
-        recordingInProgress.text = "Recording!"
-        pauseButton.enabled = true
-        sender.enabled = false
-        audioRecorder.record()
+        recordingState()
     }
     
     //MARK: - AVAudioRecorderDelegate
     
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool) {
         if (flag) {
-            recordedAudio = RecordedAudio()
-            recordedAudio.filePathUrl = recorder.url
-            recordedAudio.title = recorder.url.lastPathComponent
+            recordedAudio = RecordedAudio(filePathUrl: recorder.url, title: recorder.url.lastPathComponent!)
             self.performSegueWithIdentifier("stopRecording", sender: recordedAudio)
         } else {
             print("Recording was not successful", terminator: "")
@@ -120,6 +101,22 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
             let data = sender as! RecordedAudio
             playSoundsVC.receivedAudio = data
         }
+    }
+    
+    //Record Label State
+    
+    func recordingState() {
+        recordingInProgress.text = "Recording in process"
+        pauseButton.enabled = true
+        resumeButton.enabled = false
+        audioRecorder.record()
+    }
+    
+    func pauseState() {
+        recordingInProgress.text = "Recording was paused"
+        pauseButton.enabled = false
+        resumeButton.enabled = true
+        audioRecorder.pause()
     }
 
 
