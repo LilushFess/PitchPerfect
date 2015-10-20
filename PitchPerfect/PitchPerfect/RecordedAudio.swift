@@ -8,14 +8,13 @@
 
 import UIKit
 
-class RecordedAudio: NSObject {
+class RecordedAudio {
     
-    var filePathUrl: NSURL!
-    var title: String!
+    var filePathUrl: NSURL
+    var title: String
     
     
     init(filePathUrl: NSURL, title: String) {
-        super.init()
         self.filePathUrl = filePathUrl
         self.title = title
     }

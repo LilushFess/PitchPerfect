@@ -34,11 +34,6 @@ class PlaySoundsViewController: UIViewController {
         let session = AVAudioSession.sharedInstance()
         try! session.overrideOutputAudioPort(AVAudioSessionPortOverride.Speaker)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     //MARK: - Actions
     
@@ -74,6 +69,7 @@ class PlaySoundsViewController: UIViewController {
     }
     
     @IBAction func playReverbAudio(sender: UIButton) {
+        reloadAudio()
         let N:Int = 10
                 reverbPlayers = []
         for _ in 0...N {
@@ -93,7 +89,7 @@ class PlaySoundsViewController: UIViewController {
     }
     
     @IBAction func stop(sender: UIButton) {
-        audioPlayer.stop()
+        reloadAudio()
     }
     
     //MARK: Play Audio

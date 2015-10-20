@@ -21,10 +21,6 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     var recordedAudio:RecordedAudio!
     
     //MARK: - View Controller Life Cycle
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -34,10 +30,6 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         pauseButton.hidden = true
         
         recordingInProgress.text = "Tap to Record"
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
     
     //MARK: - Actions
@@ -84,13 +76,23 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool) {
         if (flag) {
             recordedAudio = RecordedAudio(filePathUrl: recorder.url, title: recorder.url.lastPathComponent!)
-            self.performSegueWithIdentifier("stopRecording", sender: recordedAudio)
+            performSegueWithIdentifier("stopRecording", sender: recordedAudio)
         } else {
-            print("Recording was not successful", terminator: "")
+            failRecordingAlert()
             recordButton.enabled = true
             stopButton.hidden = true
         }
         
+    }
+    
+    //MARK: - Alert
+    
+    func failRecordingAlert() {
+        let alertMessage: String = NSLocalizedString("Recording was not successful", comment: "Alert Message")
+        let alertController = UIAlertController(title: "Error!", message: alertMessage, preferredStyle: .Alert)
+        let OkAction = UIAlertAction(title: "Ok", style: .Default, handler: nil)
+        alertController.addAction(OkAction)
+        self.presentViewController(alertController, animated: true) { }
     }
     
     //MARK: - Segue
