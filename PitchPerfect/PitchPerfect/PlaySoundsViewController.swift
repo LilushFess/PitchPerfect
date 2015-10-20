@@ -20,6 +20,7 @@ class PlaySoundsViewController: UIViewController {
     var receivedAudio: RecordedAudio!
     var audioEngine: AVAudioEngine!
     var audioFile:AVAudioFile!
+    var reverbPlayers:[AVAudioPlayer]!
 
     //MARK: - View Controller Life Cycle
     
@@ -89,7 +90,7 @@ class PlaySoundsViewController: UIViewController {
     
     @IBAction func playReverbAudio(sender: UIButton) {
         let N:Int = 10
-        var reverbPlayers:[AVAudioPlayer] = []
+                reverbPlayers = []
         for _ in 0...N {
             if let audioPlayerTemp = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl) {
                 reverbPlayers.append(audioPlayerTemp)
@@ -114,7 +115,7 @@ class PlaySoundsViewController: UIViewController {
         audioPlayer.stop()
         audioEngine.stop()
         audioEngine.reset()
-        
+
         let audioPlayerNode = AVAudioPlayerNode()
         audioEngine.attachNode(audioPlayerNode)
         
